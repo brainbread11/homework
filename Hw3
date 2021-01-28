@@ -1,0 +1,87 @@
+import os
+import random
+
+fileName = ['test_image.exr', 'sequence_file.jpg', 'local_trash.tmp', 'docs.txt', 'render.tiff']
+seqRange = range(0, 388)
+mainFolder = 'D:/Work/testProject/sequence'
+folders = [['root', []], ['images', [['tifs', []], ['jpegs', []]]], ['ready', [['avi', []]]]]
+
+
+# Podgotovka k zadache
+# create root folder
+def createFolder(path):
+    if not os.path.exists(path):
+        os.mkdir(path)
+        print ('Folder created: \n' + os.path.normpath(path))
+    else:
+        print ('Folder ' + os.path.normpath(path) + ' already created!')
+
+
+# adding new folders
+def addFolder(root, folders):
+    if folders:
+        for i in folders:
+            name = i[0]
+            subPath = os.path.join(root, name)
+            createFolder(subPath)
+            addFolder(subPath, i[1])
+            s = randomGen(seqRange[0], seqRange[-1] + 1)
+            sequenceCreate(name, splitextRand(fileName)[1], subPath, s[0], s[- 1] + 1)
+            return subPath
+
+
+# generate files
+def sequenceCreate(name, ext, folder, first, last):
+    tiles = range(first, last + 1)
+    list = []
+    for i in tiles:
+        files = splitextRand(fileName)[0] + str(i) + splitextRand(fileName)[1]
+        d = os.path.join(folder, files)
+        genFile = open(d, 'w')
+        genFile.closed
+        print ('File generated: ' + genFile.name)
+        list.append(d)
+
+
+# generate random integer
+def randomGen(x, y):
+    a = random.randint(x, y)
+    b = random.randint(x, y)
+    if a > b:
+        b = a + 1
+    sequenceRange = range(a, b)
+    return sequenceRange
+
+
+# generate random filename
+def splitextRand(f):
+    a = os.path.splitext(f[random.randint(0, len(f) - 1)])
+    return a
+
+
+splitextRand(fileName)
+createFolder(mainFolder)
+addFolder(mainFolder, folders)
+
+
+for currentPath, dirs, files in os.walk(mainFolder):
+    for f in files:
+        baseName = os.path.basename(f)
+        name, ext = os.path.splitext(baseName)
+        for i in name:
+            if name[-1].isdigit():
+                buffer = []
+                i = 0
+                while name[-1].isdigit():
+                    buffer.append(name[-1])
+                    name = name[:-1]
+                    if i > 100:
+                        break
+                    i += 1
+                padding = len(buffer)
+                index = int(''.join(reversed(buffer)))
+                newIndex = '#'*padding
+                seqFile = name + newIndex + ext
+                normFile = name + str(index) + ext
+            result.append(normFile)
+print result
