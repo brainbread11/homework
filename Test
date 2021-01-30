@@ -1,0 +1,26 @@
+mainFolder = r'D:/Work/testProject/sequence/images/jpegs'
+numberSequence = []
+nameSequence = []
+for currentPath, dirs, files in os.walk(mainFolder):
+    for f in files:
+        name, ext = os.path.splitext(f)
+        for i in name:
+            if name[-1].isdigit():
+                buffer = []
+                i = 0
+                while name[-1].isdigit():
+                    buffer.append(name[-1])
+                    name = name[:-1]
+                    if i > 100:
+                        break
+                    i += 1
+                padding = len(buffer)
+                index = int(''.join(reversed(buffer)))
+                newIndex = '#'*padding
+                numberSequence.append(name + ext)
+                nameSequence.append(name + str(index) + ext)
+d = {}
+list = []   
+for i, n in zip(numberSequence, nameSequence):
+    d = {i:n}
+    print d.items()
